@@ -323,6 +323,21 @@ export class AGIChannel extends events.EventEmitter {
       return false;
     }
   }
+  /**
+   * Record File AGI command. Better than exec(record) because can keep file during hangup
+   */
+  async RecordFile(filename: string, type: string, terminate: string, duration: string, silence: string) {
+    try {
+      this.currently = "RecordFile";
+      await this.send(`RECORD FILE ${filename} ${type} "${terminate}" ${duration} BEEP s=${silence}`);
+      this.currently = false;
+      return;
+    } catch (err) {
+      this.emit("error", "RecordFile ERROR: " + err);
+      return false;
+    }
+  }
+
 
   /**
    * Send FastAGI command to specified socket
